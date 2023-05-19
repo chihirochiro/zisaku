@@ -2,6 +2,6 @@
 
 @section('content')
 
-
+ユーザーメッセージ
 
 @endsection

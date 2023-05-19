@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Post;
+use App\User;
 use Illuminate\Support\Facades\Auth;
 
-class PostController extends Controller
+
+class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,14 +16,7 @@ class PostController extends Controller
      */
     public function index()
     {
-        // 自分の投稿内容の表示
-        $post = new Post; 
-
-        $all = $post->all()->toArray();
-
-        return view('general',[
-            'posts'=>$all,
-        ]);
+        //
     }
 
     /**
@@ -32,7 +26,7 @@ class PostController extends Controller
      */
     public function create()
     {
-        return view('new_posts');
+        //
     }
 
     /**
@@ -43,18 +37,7 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        // 新規投稿内容のDB保存
-        $post = new Post;       
-
-        $post->title = $request->title;
-        $post->worries = $request->worries;
-        $post->budget = $request->budget;
-        $post->station = $request->station;
-        $post->other = $request->other;
-        $post->user_id = Auth::id();
-
-        $post->save();
-        return redirect('mypage');
+        //
     }
 
     /**
@@ -65,7 +48,7 @@ class PostController extends Controller
      */
     public function show($id)
     {
-        
+        //
     }
 
     /**
@@ -76,7 +59,10 @@ class PostController extends Controller
      */
     public function edit($id)
     {
-        //
+        $user=User::find($id);
+        return view('general_edit',[
+            'user'=>$user
+        ]);
     }
 
     /**
@@ -88,7 +74,17 @@ class PostController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        //dd($request->name);
+        $user=User::find(Auth::id());
+        $user->name = $request->name;
+        $user->email = $request->email;
+
+        //画像登録
+
+        $user->save();
+        return redirect('mypage');
+        
+
     }
 
     /**
@@ -99,6 +95,9 @@ class PostController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $user = User::find($id);
+ 
+        $user->delete();
+        return redirect('/')->with('flash_message', 'アカウントを削除しました');
     }
 }

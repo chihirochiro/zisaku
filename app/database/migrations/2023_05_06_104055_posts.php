@@ -20,6 +20,7 @@ class Posts extends Migration
             $table->string('worries',100);
             $table->string('budget',100);
             $table->string('station',100);
+            $table->string('other',200);
             $table->timestamps();
         });
     }

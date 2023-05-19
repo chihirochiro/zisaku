@@ -6,7 +6,8 @@ use Illuminate\Http\Request;
 use App\Post;
 use Illuminate\Support\Facades\Auth;
 
-class PostController extends Controller
+
+class MypageController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,13 +16,11 @@ class PostController extends Controller
      */
     public function index()
     {
-        // 自分の投稿内容の表示
-        $post = new Post; 
-
-        $all = $post->all()->toArray();
-
+        $posts=Post::where('user_id',Auth::id())->get();
+        $details=Post::where('user_id',Auth::id())->first();
         return view('general',[
-            'posts'=>$all,
+            'posts'=>$posts,
+            'details'=>$details
         ]);
     }
 
@@ -32,7 +31,7 @@ class PostController extends Controller
      */
     public function create()
     {
-        return view('new_posts');
+        //
     }
 
     /**
@@ -43,18 +42,7 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        // 新規投稿内容のDB保存
-        $post = new Post;       
-
-        $post->title = $request->title;
-        $post->worries = $request->worries;
-        $post->budget = $request->budget;
-        $post->station = $request->station;
-        $post->other = $request->other;
-        $post->user_id = Auth::id();
-
-        $post->save();
-        return redirect('mypage');
+        //
     }
 
     /**
@@ -65,7 +53,7 @@ class PostController extends Controller
      */
     public function show($id)
     {
-        
+        //
     }
 
     /**
