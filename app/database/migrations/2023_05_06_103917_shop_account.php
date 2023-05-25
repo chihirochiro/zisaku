@@ -13,7 +13,7 @@ class ShopAccount extends Migration
      */
     public function up()
     {
-        Schema::create('shop_acccounts', function (Blueprint $table) {
+        Schema::create('shop_accounts', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->tinyInteger('user_id');
             $table->string('name',30);
@@ -32,6 +32,6 @@ class ShopAccount extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('shop_acccounts');
+        Schema::dropIfExists('shop_accounts');
     }
 }

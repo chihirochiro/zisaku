@@ -1,4 +1,9 @@
 <?php
+use App\User;
+use App\Post;
+use App\Http\Controllers\AdminController;
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -11,25 +16,52 @@
 |
 */
 
+
 Route::get('/', function () {
     return view('welcome');
 });
 
+
+Route::get('password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('password.request');
+Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail')->name('password.email');
+Route::get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm')->name('password.reset');
+Route::post('password/reset/{token}', 'Auth\ResetPasswordController@reset');
+
 Auth::routes();
+
+Route::group(['middleware' => 'auth'],function(){
 
 Route::get('/home', 'HomeController@index')->name('home');
 Route::resource('posts', 'PostController');
-// Route::get('/posts','PostController@index')->name('posts.index'); 投稿内容の一覧表示
-// Route::get('/posts/create','PostController@create')->name('posts.create'); 新規投稿内容の表示
-// Route::post('/posts','PostController@store')->name('posts.store'); 新規投稿処理
-// Route::post('/posts/{post} ','PostController@show')->name('posts.show'); 投稿詳細
-// Route::get('/posts/{post}/edit ','PostController@edit')->name('posts.edit');　アカウント編集画面の表示
-// Route::post('/posts/{post} ','PostController@edit')->name('posts.update');　アカウント編集更新
 
 
 Route::resource('mypage', 'MypageController');
 Route::resource('user', 'UserController');
-// Route::get('/user','UserController@index')->name('user.index'); 一覧表示
-// Route::get('/user/create','UserController@create')->name('user.create');　ユーザー登録画面の表示
-// Route::post('/user','UserController@store')->name('user.store');　ユーザー登録処理
-// Route::get('/user/{user}/edit ','UserController@edit')->name('user.edit');　アカウント編集画面の表示
+
+Route::resource('comment', 'CommentController');
+
+Route::resource('shop', 'ShopController');
+
+Route::get('/count/{id}', 'ShopController@bad_count')->name('shop.bad_count');
+
+Route::get('/serch', 'PostController@serch')->name('post.serch');
+
+Route::get('/reply/{id}', 'CommentController@rep')->name('comment.rep');
+Route::post('/reply/{id}', 'CommentController@store');
+
+Route::resource('reserve', 'ReserveController');
+
+Route::post('ajaxlike', 'PostController@ajaxlike')->name('posts.ajaxlike');
+
+
+Route::get('/management', [AdminController::class, 'adminIndex'])->name('admin.index');
+Route::get('/manage_post', [AdminController::class, 'adminPost'])->name('admin.post');
+Route::get('/manage_general', [AdminController::class, 'adminGeneral'])->name('admin.general');
+Route::get('/manage_shop', [AdminController::class, 'adminShop'])->name('admin.shop');
+
+
+
+
+
+
+});

@@ -3,13 +3,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\User;
+use App\Comment;
+use App\Post;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Requests\UserDate;
 
 
 
-class UserController extends Controller
+class CommentController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -18,7 +18,15 @@ class UserController extends Controller
      */
     public function index()
     {
-        //
+        $posts=Post::where('user_id',Auth::id())->get();
+        foreach($posts as $post){
+            $post_id[]=$post->id;
+        }
+        foreach($post_id as $pi){
+            $comments[]=Comment::where('post_id',$pi)->where('user_id','!=',Auth::id())->get();
+        }
+
+        return view('comment_index',compact('comments'));
     }
 
     /**
@@ -28,7 +36,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        //
+       
     }
 
     /**
@@ -39,7 +47,14 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $comment = new Comment;       
+
+        $comment->text = $request->text;
+        $comment->post_id = $request->post_id;
+        $comment->user_id = Auth::id();
+
+        $comment->save();
+        return redirect('home');
     }
 
     /**
@@ -61,9 +76,8 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        $user=User::find($id);
-        return view('general_edit',[
-            'user'=>$user
+        return view('comment',[
+            'id'=>$id
         ]);
     }
 
@@ -76,24 +90,7 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        return Validator::make($request, [
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-        ]);
-        $image = request()->file('image');
-        request()->file('image')->storeAs('', $image, 'public');
-
-        $user=User::find(Auth::id());
-        $user->name = $request->name;
-        $user->email = $request->email;
-        $user->image = $image;
-
-
-
-        $user->save();
-        return redirect('mypage');
-        
-
+        //
     }
 
     /**
@@ -104,10 +101,15 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        $user = User::find($id);
- 
-        $user->del_flg=1;
-        $user->save();
-        return redirect('/home')->with('flash_message', 'アカウントを削除しました');
+        //
     }
+
+    public function rep($id)
+    {
+
+        return view('comment',[
+            'id'=>$id
+        ]);
+    }
+
 }

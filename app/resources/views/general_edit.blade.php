@@ -2,22 +2,53 @@
 
 @section('content')
 
-<form action="{{ route('user.update',Auth::id()) }}" method="post">
-@csrf
-@method('put')
+<div class ='panel-body'>
+        @if($errors->any())
+        <div class='alert alert-danger'>
+            <ul>
+                @foreach($errors->all() as $message)
+                <li>{{ $message }}</li>
+                @endforeach
+            </ul>
+        </div>
+        @endif
+    </div>
 
-<label for='name'>名前</label>
-<input type='text' class='form-control' name='name' value="{{$user->name}}"/>
-<label for='name'>メールアドレス</label>
-<input type='text' class='form-control' name='email' value="{{$user->email}}"/>
-<!-- 画像表示 -->
+    <div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <form action="{{ route('user.update', Auth::id()) }}" method="post" enctype="multipart/form-data">
+                @csrf
+                @method('put')
 
-<button  type='submit' class='btn btn-secondary'>編集</button>
-</form>
+                <div class="form-group form-inline input-group-lg">
+                    <span class="col-md-4 text-md-right">名前</span>
+                    <input type="text" class="form-control col-lg-5" name="name" value="{{$user->name}}">
+                </div>
 
-<form action="{{route('user.destroy', Auth::id())}}" method="post" class="float-right">
-    @csrf
-    @method('delete')
-    <input type="submit" value="アカウント削除" class="btn btn-danger" onclick='return confirm("本当にアカウント削除しちゃっていいんですか？");'>
-</form>
+                <div class="form-group form-inline input-group-lg">
+                    <span class="col-md-4 text-md-right">メールアドレス</span>
+                    <input type="text" class="form-control col-lg-5" name="email" value="{{$user->email}}">
+                </div>
+
+                <div class="form-group form-inline input-group-lg">
+                    <span class="col-md-4 text-md-right">アイコン</span>
+                    <input type="file" class="form-control col-lg-5" name="image">
+                </div>
+
+                <div class="text-center">
+                    <button type="submit" class="btn btn-secondary">編集</button>
+                    <form action="{{ route('user.destroy', Auth::id()) }}" method="post" class="float-right">
+                        @csrf
+                        @method('delete')
+                        <input type="submit" value="アカウント削除" class="btn btn-danger" onclick='return confirm("本当にアカウント削除しちゃっていいんですか？");'>
+                    </form>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+
 @endsection

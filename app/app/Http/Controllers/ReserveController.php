@@ -3,13 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\User;
+use App\Reserve;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Requests\UserDate;
 
 
 
-class UserController extends Controller
+class ReserveController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -18,7 +17,14 @@ class UserController extends Controller
      */
     public function index()
     {
-        //
+        // 自分の投稿内容の表示
+        $reserve = new Reserve; 
+
+        $all = $reserve->all()->toArray();
+
+        return view('shop_page',[
+            'reserve'=>$all,
+        ]);
     }
 
     /**
@@ -28,7 +34,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        //
+        return view('reserve');
     }
 
     /**
@@ -39,7 +45,19 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $reserve = new Reserve;       
+
+        $reserve->name = $request->name;
+        $reserve->date = $request->date;
+        $reserve->tel = $request->tel;
+        $reserve->others = $request->other;
+        // 相手方（一般ユーザーのIDを登録）
+        $reserve->user_id = 1;
+        $reserve->shop_account_id = Auth::id();
+
+        $reserve->save();
+        return redirect('shop');
+    
     }
 
     /**
@@ -50,7 +68,9 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        //
+        $details=Reserve::where('id',$id)->first();
+
+        return view('reserve_detail',compact('details'));
     }
 
     /**
@@ -61,10 +81,8 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        $user=User::find($id);
-        return view('general_edit',[
-            'user'=>$user
-        ]);
+        $reserve=Reserve::find($id);
+        return view('reserve_edit',compact('reserve'));
     }
 
     /**
@@ -76,24 +94,16 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        return Validator::make($request, [
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-        ]);
-        $image = request()->file('image');
-        request()->file('image')->storeAs('', $image, 'public');
+        $reserve=Reserve::find($id);     
 
-        $user=User::find(Auth::id());
-        $user->name = $request->name;
-        $user->email = $request->email;
-        $user->image = $image;
+        $reserve->name = $request->name;
+        $reserve->date = $request->date;
+        $reserve->tel = $request->tel;
+        $reserve->other = $request->other;
+        $reserve->user_id = Auth::id();
 
-
-
-        $user->save();
-        return redirect('mypage');
-        
-
+        $reserve->save();
+        return redirect('shop');
     }
 
     /**
@@ -104,10 +114,9 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        $user = User::find($id);
+        $reserve = Reserve::find($id);
  
-        $user->del_flg=1;
-        $user->save();
-        return redirect('/home')->with('flash_message', 'アカウントを削除しました');
+        $reserve->delete();
+        return redirect('shop')->with('flash_message', '投稿を削除しました');
     }
 }

@@ -2,26 +2,10 @@
 
 @section('content')
 
-<!-- ログイン後のホーム画面 -->
-
- <div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <tr>
-                @can('general')
-                <th scope="col"><a class="btn btn-outline-success" href="{{ route('mypage.index') }}" role="button">マイページ</a></th>
-                @elsecan('shop')
-                <th scope="col"><a class="btn btn-outline-success" href="{{ route('shop.index') }}" role="button">店舗マイページ</a></th>      
-                @elsecan('admin')          
-                <th scope="col"><a class="btn btn-outline-success" href="{{ route('admin.index') }}" role="button">管理者ページ</a></th>    
-                @endcan            
-            </tr>
-        </div>
-    </div>
+<!-- ホームに戻るボタン -->
+<div class="container">
+    <a href="{{ url('/management') }}" class="btn btn-primary ml-auto">戻る</a>
 </div>
-
-<!-- スペース -->
-<div class="container mt-4"></div>
 
 <!-- 検索機能 -->
 <div class="container">
@@ -62,6 +46,11 @@
                             <td><a href="{{ route('posts.show', $post['id']) }}">#</a></td>
                             <td>{{$post['title']}}</td>
                             <td>{{$post['worries']}}</td>
+                            <td><form action="{{route('posts.destroy', $post['id'])}}" method="post" class="float-right">
+                            @csrf
+                            @method('delete')
+                            <input type="submit" value="削除" class="btn btn-danger" onclick='return confirm("削除しますか？");'>
+                            </form></td>
                         </tr>
                         @endforeach
                     </tbody>
@@ -70,6 +59,4 @@
         </div>
     </div>
 </div>
-
-
 @endsection

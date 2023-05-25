@@ -3,13 +3,16 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\User;
+use App\Shop_account;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Requests\UserDate;
+use App\Reserve;
+use App\Http\Requests\ShopDate;
 
 
 
-class UserController extends Controller
+
+
+class ShopController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -18,7 +21,16 @@ class UserController extends Controller
      */
     public function index()
     {
-        //
+    
+        $reserve=Reserve::where('shop_account_id',Auth::id())->get();
+
+        $all=Shop_account::where('user_id',Auth::id())->first();
+
+        // dd($all);
+        return view('shop_page',[
+            'shop'=>$all,
+            'reserve'=>$reserve,
+        ]);
     }
 
     /**
@@ -61,9 +73,9 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        $user=User::find($id);
-        return view('general_edit',[
-            'user'=>$user
+        $shop=Shop_account::find($id);
+        return view('shop_edit',[
+            'shop'=>$shop
         ]);
     }
 
@@ -74,26 +86,30 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(ShopDate $request, $id)
     {
-        return Validator::make($request, [
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-        ]);
         $image = request()->file('image');
-        request()->file('image')->storeAs('', $image, 'public');
+        if(request()->file('image')!==NULL){
 
-        $user=User::find(Auth::id());
-        $user->name = $request->name;
-        $user->email = $request->email;
-        $user->image = $image;
-
-
-
-        $user->save();
-        return redirect('mypage');
+            request()->file('image')->storeAs('', $image, 'public');
+        }
+        
+        $shop=Shop_account::where('user_id',Auth::id())->first();
+        if(!$shop){
+            $shop=new Shop_account;
+        }
+        $shop->name = $request->name;
+        $shop->address = $request->address;
+        $shop->tel = $request->tel;
+        $shop->pr = $request->pr;
+        $shop->image = $image;
+        $shop->bad_count = 0;
+        $shop->user_id = Auth::id();
         
 
+
+        $shop->save();
+        return redirect('shop');
     }
 
     /**
@@ -104,10 +120,22 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        $user = User::find($id);
+        $shop = Shop_account::find($id);
  
-        $user->del_flg=1;
-        $user->save();
-        return redirect('/home')->with('flash_message', 'アカウントを削除しました');
+        $shop->delete();
+        return redirect('shop_page');
     }
+
+    public function bad_count($id)
+    {
+        $count = Shop_account::where('user_id',$id)->first();
+        $count->bad_count+=1;
+
+        $count->save();
+
+        return redirect('comment')->with('flash_message', '違反報告しました');
+
+    }
+
+
 }
