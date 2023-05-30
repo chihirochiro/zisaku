@@ -59,7 +59,7 @@
                             </div>
                         </div>
                         <div class="text-center">
-                            <button class="btn btn-sm btn-outline-primary" type="submit">登録</button>
+                            <button class="btn btn-success" type="submit">登録</button>
                         </div>
                     </form>
                 </div>

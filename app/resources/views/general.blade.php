@@ -28,18 +28,18 @@
         </div>
     </div>
 
-<!-- スペース -->
-<div class="container mt-4"></div>
+    <!-- スペース -->
+    <div class="container mt-4"></div>
 
-    <div class="row justify-content-center">
+        <div class="row justify-content-center">
         <div class="col-md-12 text-center">
             <img src="{{ Auth::user()->image ? asset('storage/'.Auth::user()->image) : asset('storage/noimage.jpeg')}}" style="width: 300px; height: auto;">
         </div>
     </div>
 </div>
 
-<!-- スペース -->
-<div class="container mt-4"></div>
+    <!-- スペース -->
+    <div class="container mt-4"></div>
 
 <!-- 自分の投稿した投稿一覧 -->
 <div class="container">

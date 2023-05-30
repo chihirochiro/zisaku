@@ -74,12 +74,8 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UserDate $request, $id)
     {
-        return Validator::make($request, [
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-        ]);
         $image = request()->file('image');
         request()->file('image')->storeAs('', $image, 'public');
 
@@ -88,11 +84,8 @@ class UserController extends Controller
         $user->email = $request->email;
         $user->image = $image;
 
-
-
         $user->save();
-        return redirect('mypage');
-        
+        return redirect('mypage');       
 
     }
 

@@ -35,11 +35,11 @@
                         <input type='file' class='form-control' name='image' />
 
                     <button  type='submit' class='btn btn-secondary'>編集完了</button>
+                </form>
                     <form action="{{route('shop.destroy', Auth::id())}}" method="post" class="float-right">
                 @csrf
                 @method('delete')
                     <input type="submit" value="アカウント削除" class="btn btn-danger" onclick='return confirm("本当にアカウント削除しますか？");'>
-                </form>
             </form>
         </div>
     </div>

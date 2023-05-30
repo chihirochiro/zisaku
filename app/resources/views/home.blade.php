@@ -30,7 +30,7 @@
             <div class="input-group">
                 <input type="search" name="search" class="form-control">
                 <div class="input-group-append">
-                    <button type="submit" class="btn btn-primary">検索</button>
+                    <button type="submit" class="btn btn-outline-warning">検索</button>
                 </div>
             </div>
         </form>

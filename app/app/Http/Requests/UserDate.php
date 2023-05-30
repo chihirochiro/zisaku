@@ -25,7 +25,7 @@ class UserDate extends FormRequest
     {
         return [
             'name' => 'required',
-            'email' => 'required',
+            'email' => 'required'
         ];
     }
 }
